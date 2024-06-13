@@ -1,28 +1,30 @@
 import UserMongoDao from "../DAO/mongo/usersMongo.dao"
+import { IStore } from "../entities/store.entiti"
 
-class UserStore {
-   public dao: UserMongoDao
+class UserStore implements IStore {
+   private dao: UserMongoDao
     constructor(dao: UserMongoDao){
         this.dao = dao
     }
-    async getAll(){
+   public async getAll(){
         return await this.dao.getAll()
     }
 
-    async create(params: object){
+   public async create(params: object){
         return await this.dao.create(params)
     }
 
-    async find(id: string) {
+   public async find(id: string) {
         return await this.dao.find(id)
     }
-    async update(id: string, params: any){
+   public async update(id: string, params: any){
         return await this.dao.update(id, params)
     }
 
-    async delete(id: string){
+   public async delete(id: string){
         return await this.dao.delete(id)
     }
+
 }
 
 export default UserStore

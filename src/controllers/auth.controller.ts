@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     try {
         console.log('comienza el servicio /post del auth');
         
-        const userLogin = await userService.login(req.body)
+        const userLogin = await userService.loginUser(req.body)
         res.json({status: 'success', message: userLogin})
         console.log('termina el servicio /post del auth');
         

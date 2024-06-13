@@ -1,27 +1,27 @@
 import { IStore } from "../entities/store.entiti"
 
-class BaseInterface<T extends IStore> {
-    private store: T
+abstract class BaseInterface<T extends IStore> {
+    protected store: T
     constructor(store: T){
         this.store = store
     }
-    async getAll(){
+    public async getAll(): Promise<any>{
         return await this.store.getAll()
     }
 
-    async create(params: object){
+    public async create(params: object): Promise<any>{
         return await this.store.create(params)
     }
 
-    async find(id: string){
+    public async find(id: string): Promise<any>{
         return await this.store.find(id)
     }
 
-    async update(id: string, params: any){
+    public async update(id: string, params: any): Promise<any>{
         return await this.store.update(id, params)
     }
 
-    async delete(id: string){
+    public async delete(id: string): Promise<any>{
         return await this.store.delete(id)
     }
 
