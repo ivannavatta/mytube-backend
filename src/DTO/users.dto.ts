@@ -1,7 +1,7 @@
 import { IUser } from "../entities/user.entiti"
 import { createHash } from "../utils/cryptPassword.util"
 
-class UserDto {
+class UserDto implements IUser {
     firstName: string
     lastName: string
     email: string

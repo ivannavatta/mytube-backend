@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+const { ObjectId } = mongoose.Types
 
 const userSchema = new mongoose.Schema({
     firstName: String,
@@ -7,7 +8,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    password: String
+    password: String,
+    video: {
+        type: ObjectId ,
+        ref: 'video',
+    }
 })
 
 export default userSchema

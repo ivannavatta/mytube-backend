@@ -17,13 +17,16 @@ router.post('/', async (req, res) => {
         
         const userLogin = await userService.loginUser(req.body)
         res.json({status: 'success', message: userLogin})
+
         console.log('termina el servicio /post del auth');
         
     } catch (error) {
         if(error instanceof Error){
             console.log('comienza el CATCH servicio /post del auth');
+
             console.log(error.message);
             res.status(500).json({status: 'Internal Server Error',  error: error.message})
+            
             console.log('termina el CATCH servicio /post del auth');
         }
     }

@@ -6,8 +6,32 @@ const videoSchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'user'
     },
-    title: String,
-    url: String
+    videos: {
+        type: [
+            {
+                originalName: String,
+                title: String,
+                size: Number,
+                isPrivate: {
+                    type: Boolean,
+                    default: false
+                },
+                url: String,
+            }
+        ]
+    },
+    status: {
+        type: Boolean,
+        default: true
+      },
+    createdAt: {
+        type: Date,
+        default: Date.now
+      },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+      }
 })
 
 export default videoSchema
