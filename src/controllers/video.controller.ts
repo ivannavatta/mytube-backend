@@ -6,6 +6,7 @@ import FindUser from '../useCases/findUser.useCase'
 import UserMongoDao from '../DAO/mongo/usersMongo.dao'
 import UserStore from '../stores/users.store'
 import FindVideo from '../useCases/findVideo.useCase'
+import uploader from '../utils/multer.util'
 
 
 const router = Router()
@@ -34,18 +35,48 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.post('/', (req, res, next) => {
+ 
+        uploader.single('img')(req, res, async function (err) {
+            if (req.file) {
+                console.log('File size:', req.file.size / 1048576)
+              }
+          if (err) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                console.log('El archivo es demasiado grande. El tamaño máximo permitido es 200MB.');
+              return res.status(400).json({ error: 'El archivo es demasiado grande. El tamaño máximo permitido es 200MB.' })
+            } else if (err.message === 'Solo se permiten archivos .mp4') {
+              return res.status(400).json({ error: 'Solo se permiten archivos .mp4' })
+            } else {
+              return res.status(400).json({ error: err.message })
+            }
+          }
+          if (!req.file) {
+            return res.status(400).json({ error: 'No se subió ningún archivo' })
+          }
+          console.log(req.file)
+          console.log(req.body);
+          
+          const reqBody = {
+            email: req.body.email,
+            title: req.body.title,
+            isPrivate: req.body.isPrivate,
+          }
+          
+          const info = {
+            email: reqBody.email,
+            title: reqBody.title,
+            isPrivate: reqBody.isPrivate,
+            url: 'www.miTube.com/wathc?v=2f612fn',
+            originalName: req.file.originalname,
+            size: req.file.size,
+          }
+          const newVideo = await videoServices.create(info)
 
-router.post('/', async (req, res) => {
-    try {
-        const newVideo = await videoServices.create(req.body)
-        console.log("🚀 ~ router.post ~ newVideo:", newVideo)
-        res.json({status: 'success', payload: newVideo})
-    } catch (error) {
-        if(error instanceof Error){
-            console.log(error.message);
-            res.status(500).json({status: 'Internal Server Error',  error: error.message})
-        }
-    }
-})
+          res.json({ status: 'success', payload: newVideo })
+        })
+        
+  
+  })
 
 export default router

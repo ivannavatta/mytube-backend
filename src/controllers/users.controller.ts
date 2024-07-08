@@ -28,15 +28,18 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         console.log('inica servico /post de usersController');
-
+        console.log(req.body);
+        
         const newUser = await userServices.create(req.body)
         res.json({status: 'success', payload: newUser})
         
         console.log('finaliza servico /post de usersController');
     } catch (error) {
         if(error instanceof Error){
+            console.log('comienza el CATCH servicio /post del users');
             console.log(error.message);
             res.status(500).json({status: 'Internal Server Error',  error: error.message})
+            console.log('termina el CATCH servicio /post del users');
         }
     }
 })

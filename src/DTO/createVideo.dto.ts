@@ -1,3 +1,5 @@
+import { ValidatePrivacy } from './../utils/validatePrivacy';
+import { convertBytesToMegaBites } from './../utils/convertToMegaBite';
 import { Types } from "mongoose"
 import IVideo from "../entities/video.entiti"
 
@@ -12,8 +14,8 @@ export default class CreateVideoDto{
         this.user = id
         this.originalName = newVideoInfo.originalName
         this.title = newVideoInfo.title
-        this.size = Number(newVideoInfo.size)
-        this.isPrivate = newVideoInfo.isPrivate ?? false
+        this.size = convertBytesToMegaBites(Number(newVideoInfo.size))
+        this.isPrivate = ValidatePrivacy(newVideoInfo.isPrivate ?? 'public')
         this.url = newVideoInfo.url
     }
 }

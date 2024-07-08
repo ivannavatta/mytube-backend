@@ -3,6 +3,6 @@ export default interface IVideo {
     originalName: string
     title: string
     size: number,
-    isPrivate?: boolean
+    isPrivate?: string
     url: string,
 }
