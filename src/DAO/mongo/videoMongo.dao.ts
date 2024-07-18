@@ -20,10 +20,30 @@ class VideoMongoDao implements IStore {
         return await Video.updateOne({_id: id}, params)
     }
 
-   public async delete(id: string){
-        return await Video.updateOne({_id: id})
+   public async delete(id: string, videoId: string){
+        const video = await Video.findById(id) 
+        console.log("🚀 ~ delete ~ video:", video)
+
+        if(video){
+            const videoIndex = video.videos.findIndex(videoExist => videoExist?._id?.toString() === videoId.toString())
+
+            if(videoIndex === 0){
+                console.log('hola');
+                video.videos[videoIndex].status = false
+                video.updatedAt = new Date()
+                await video.save()
+            }
+            else{
+                throw new Error('the user video does not exist')
+            }
+        }
+        else{
+            throw new Error('the video does not exist')
+        }
     }
-    
+ 
 }
+    
+
 
 export default VideoMongoDao

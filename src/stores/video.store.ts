@@ -22,8 +22,8 @@ class VideoStore implements IStore {
         return await this.dao.update(id, params)
     }
 
-   public async delete(id: string){
-        return await this.dao.delete(id)
+   public async delete(id: string, videoId: string){
+        return await this.dao.delete(id, videoId)
     }
 
 }

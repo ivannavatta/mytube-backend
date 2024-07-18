@@ -3,7 +3,7 @@ import IVideo from "../entities/video.entiti";
 import VideoStore from "../stores/video.store";
 import FindUser from "./findUser.useCase";
 import FindVideo from "./findVideo.useCase";
-import { Types } from "mongoose";
+
 
 export default class CreateVideo {
     private store: VideoStore;
@@ -20,13 +20,11 @@ export default class CreateVideo {
         const { email, originalName, title, size, isPrivate, url } = params;
         const user = await this.find.execute(email);
 
-        console.log("🚀 ~ CreateVideo ~ execute ~ user:", user);
-
         if (!user) {
             throw new Error('User not found');
         }
 
-        if (!originalName || !title || !size || !url) {
+        if (!originalName || !title || !size || !isPrivate) {
             throw new Error('bad request');
         }
 
@@ -43,10 +41,8 @@ export default class CreateVideo {
         };
 
         const findVideo = await this.findVideo.execute(userId);
-        console.log("🚀 ~ CreateVideo ~ execute ~ findVideo:", findVideo);
+      
         const videoId = findVideo?.user?.toString();
-        console.log("🚀 ~ CreateVideo ~ execute ~ videoId:", videoId);
-        console.log("🚀 ~ CreateVideo ~ execute ~ userId:", userId);
 
         if (findVideo && userId.toString() === videoId) {
             findVideo.videos.push(newVideoInfo);

@@ -16,6 +16,6 @@ export default class CreateVideoDto{
         this.title = newVideoInfo.title
         this.size = convertBytesToMegaBites(Number(newVideoInfo.size))
         this.isPrivate = ValidatePrivacy(newVideoInfo.isPrivate ?? 'public')
-        this.url = newVideoInfo.url
+        this.url =  newVideoInfo.url
     }
 }

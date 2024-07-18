@@ -21,8 +21,8 @@ abstract class BaseInterface<T extends IStore> {
         return await this.store.update(id, params)
     }
 
-    public async delete(id: string): Promise<any>{
-        return await this.store.delete(id)
+    public async delete(id: string, videoId: string): Promise<any>{
+        return await this.store.delete(id, videoId)
     }
 
 }

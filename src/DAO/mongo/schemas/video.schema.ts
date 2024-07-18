@@ -17,13 +17,15 @@ const videoSchema = new mongoose.Schema({
                     default: false
                 },
                 url: String,
+                status: {
+                    type: Boolean,
+                    default: true
+                  },
+            
             }
         ]
     },
-    status: {
-        type: Boolean,
-        default: true
-      },
+    
     createdAt: {
         type: Date,
         default: Date.now
@@ -33,5 +35,6 @@ const videoSchema = new mongoose.Schema({
         default: Date.now
       }
 })
+
 
 export default videoSchema

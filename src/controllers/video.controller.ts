@@ -7,7 +7,9 @@ import UserMongoDao from '../DAO/mongo/usersMongo.dao'
 import UserStore from '../stores/users.store'
 import FindVideo from '../useCases/findVideo.useCase'
 import uploader from '../utils/multer.util'
-
+import { generateUniqueId } from '../utils/generateId.util'
+import appConfig from "../configs/app.config"
+const { baseUrl } = appConfig
 
 const router = Router()
 
@@ -22,25 +24,52 @@ const findVideo = new FindVideo(videoStore)
 const videoServices = new VideoService(videoStore, findUser, findVideo)
 
 router.get('/', async (req, res) => {
+  try {
+      console.log('inica servico /get de videoController');
+      
+      const videos = await videoServices.getAll()
+      res.json({status: 'success', payload: videos})
+
+      console.log('finaliza servico /get de videoController');
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({status: 'Internal Server Error',  error: error})
+  }
+})
+
+router.get('/public', async (req, res) => {
     try {
-        console.log('inica servico /get de videoController');
+        console.log('inica servico /public de videoController');
         
-        const videos = await videoServices.getAll()
+        const videos = await videoServices.getAllPublic()
         res.json({status: 'success', payload: videos})
 
-        console.log('finaliza servico /get de videoController');
+        console.log('finaliza servico /public de videoController');
     } catch (error) {
         console.log(error);
         res.status(500).json({status: 'Internal Server Error',  error: error})
     }
 })
 
+router.post('/channel', async (req, res) => {
+  const  { email }  = req.body  
+  try {
+    console.log('inica servico /channel de videoController');
+    
+    const videos = await videoServices.getUserVideos(email)
+    res.json({status: 'success', payload: videos})
+
+    console.log('finaliza servico /channel de videoController');
+} catch (error) {
+    console.log(error);
+    res.status(500).json({status: 'Internal Server Error',  error: error})
+}
+
+
+})
 router.post('/', (req, res, next) => {
  
         uploader.single('img')(req, res, async function (err) {
-            if (req.file) {
-                console.log('File size:', req.file.size / 1048576)
-              }
           if (err) {
             if (err.code === 'LIMIT_FILE_SIZE') {
                 console.log('El archivo es demasiado grande. El tamaño máximo permitido es 200MB.');
@@ -54,20 +83,19 @@ router.post('/', (req, res, next) => {
           if (!req.file) {
             return res.status(400).json({ error: 'No se subió ningún archivo' })
           }
-          console.log(req.file)
-          console.log(req.body);
-          
+      
           const reqBody = {
             email: req.body.email,
             title: req.body.title,
             isPrivate: req.body.isPrivate,
           }
+           const videoId = generateUniqueId(7)
           
           const info = {
             email: reqBody.email,
             title: reqBody.title,
             isPrivate: reqBody.isPrivate,
-            url: 'www.miTube.com/wathc?v=2f612fn',
+            url: `/watch?v=${videoId}`,
             originalName: req.file.originalname,
             size: req.file.size,
           }
@@ -78,5 +106,26 @@ router.post('/', (req, res, next) => {
         
   
   })
+
+  router.delete('/:userId/:videoId', async (req, res) => {
+    try {
+        const { userId, videoId } = req.params;
+      
+        console.log('inica servicio /delete de videoController');
+
+        const deleteVideo = await videoServices.delete(userId, videoId);
+      
+        res.status(200).json({ status: 'success', message: 'Video deleted', payload: deleteVideo });
+
+        console.log('finaliza servicio /delete de videoController');
+    } catch (error) {
+        console.log(error);
+        if(error instanceof Error){
+        res.status(500).json({ status: 'Internal Server Error', error: error.message });
+        }
+    }
+});
+
+
 
 export default router
