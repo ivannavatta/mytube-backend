@@ -7,6 +7,17 @@ export default class GetVideos {
     }
 
     public async execute(): Promise<any> {
-        return await this.store.getAll()
+        const publicVideos = await this.store.getAll();
+
+        const publicVideosFiltered = publicVideos.map(video => ({
+            ...video,
+            videos: video.videos.filter(v => !v.isPrivate)
+        }));
+
+        const videos = publicVideosFiltered.flatMap(video => video.videos);
+
+        return videos;
+
+        
     }
 }
