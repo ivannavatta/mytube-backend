@@ -27,20 +27,35 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        console.log('inica servico /post de usersController');
-        console.log(req.body);
-        
-        const newUser = await userServices.create(req.body)
-        res.json({status: 'success', payload: newUser})
-        
-        console.log('finaliza servico /post de usersController');
+        console.log('inicia servicio /post de usersController');
+
+        const newUser = await userServices.create(req.body);
+        res.json({ status: 'success', payload: newUser });
+
+        console.log('finaliza servicio /post de usersController');
     } catch (error) {
-        if(error instanceof Error){
+        if (error instanceof Error) {
             console.log('comienza el CATCH servicio /post del users');
             console.log(error.message);
-            res.status(500).json({status: 'Internal Server Error',  error: error.message})
+
+            if (error.message === 'bad request') {
+                res.status(400).json({ status: 'Error', error: 'Missing required fields' });
+            } else if (error.message === 'Email already exist') {
+                console.log('hola');
+                
+                res.redirect('/users/fail-register');
+            } else {
+                res.status(500).json({ status: 'Internal Server Error', error: error.message });
+            }
+
             console.log('termina el CATCH servicio /post del users');
         }
     }
-})
+});
+
+router.get('/fail-register', (req, res) => {
+    res.status(400).json({ status: 'Error', message: 'Email already exists' });
+});
+
+
 export default router

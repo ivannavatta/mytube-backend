@@ -15,6 +15,12 @@ export default class Register {
         if(!firstName || !lastName || !email || !password) {
          throw new Error ('bad request')
         } 
+
+        const userExist = await this.store.find(email)
+
+        if(userExist){
+            throw new Error('Email already exist')
+        }
         const newUser = new UserDto(params)
 
         return await this.store.create(newUser)
