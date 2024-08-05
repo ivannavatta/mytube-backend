@@ -30,11 +30,12 @@ jobs:
       - name: Set Railway Token
         run: echo "RAILWAY_TOKEN=${{ secrets.RAILWAY_TOKEN }}" >> $GITHUB_ENV
       - name: Link Railway Project
-        run: railway link --project ${{ secrets.RAILWAY_PROJECT_ID }} --env ${{ secrets.RAILWAY_ENV }}
+        run: railway link ${{ secrets.RAILWAY_PROJECT_ID }} --env ${{ secrets.RAILWAY_ENV }}
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: railway up
+
 
 
 
