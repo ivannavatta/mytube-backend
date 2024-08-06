@@ -27,12 +27,11 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Railway CLI
         run: npm install -g @railway/cli@3.0.8
-      - name: Authenticate Railway
-        run: railway auth login --token ${{ secrets.RAILWAY_TOKEN }}
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: railway up --project ${{ secrets.RAILWAY_PROJECT_ID }} --env ${{ secrets.RAILWAY_ENV }}
+
 
 
 
