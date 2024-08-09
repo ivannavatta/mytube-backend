@@ -68,7 +68,8 @@ router.post('/channel', async (req, res) => {
 
 })
 router.post('/', (req, res, next) => {
- 
+        console.log('inicia el servicio /post de videoController');
+        
         uploader.single('img')(req, res, async function (err) {
           if (err) {
             if (err.code === 'LIMIT_FILE_SIZE') {
@@ -102,6 +103,7 @@ router.post('/', (req, res, next) => {
           const newVideo = await videoServices.create(info)
 
           res.json({ status: 'success', payload: newVideo })
+          console.log('finaliza el servicio /post de videoController');
         })
         
   
