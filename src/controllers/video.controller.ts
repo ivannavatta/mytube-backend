@@ -67,47 +67,53 @@ router.post('/channel', async (req, res) => {
 
 
 })
-router.post('/', (req, res, next) => {
-        console.log('inicia el servicio /post de videoController');
-        
-        uploader.single('img')(req, res, async function (err) {
+router.post('/', async (req, res, next) => {
+  console.log('inicia el servicio /post de videoController');
+  
+  uploader.single('img')(req, res, async function (err) {
+      try {
           if (err) {
-            if (err.code === 'LIMIT_FILE_SIZE') {
-                console.log('El archivo es demasiado grande. El tamaño máximo permitido es 200MB.');
-              return res.status(400).json({ error: 'El archivo es demasiado grande. El tamaño máximo permitido es 200MB.' })
-            } else if (err.message === 'Solo se permiten archivos .mp4') {
-              return res.status(400).json({ error: 'Solo se permiten archivos .mp4' })
-            } else {
-              return res.status(400).json({ error: err.message })
-            }
+              if (err.code === 'LIMIT_FILE_SIZE') {
+                  console.log('El archivo es demasiado grande. El tamaño máximo permitido es 200MB.');
+                  return res.status(400).json({ error: 'El archivo es demasiado grande. El tamaño máximo permitido es 200MB.' });
+              } else if (err.message === 'Solo se permiten archivos .mp4') {
+                  return res.status(400).json({ error: 'Solo se permiten archivos .mp4' });
+              } else {
+                  return res.status(400).json({ error: err.message });
+              }
           }
+          
           if (!req.file) {
-            return res.status(400).json({ error: 'No se subió ningún archivo' })
+              return res.status(400).json({ error: 'No se subió ningún archivo' });
           }
       
           const reqBody = {
-            email: req.body.email,
-            title: req.body.title,
-            isPrivate: req.body.isPrivate,
-          }
-           const videoId = generateUniqueId(7)
+              email: req.body.email,
+              title: req.body.title,
+              isPrivate: req.body.isPrivate,
+          };
+          const videoId = generateUniqueId(7);
           
           const info = {
-            email: reqBody.email,
-            title: reqBody.title,
-            isPrivate: reqBody.isPrivate,
-            url: `/watch?v=${videoId}`,
-            originalName: req.file.originalname,
-            size: req.file.size,
-          }
-          const newVideo = await videoServices.create(info)
+              email: reqBody.email,
+              title: reqBody.title,
+              isPrivate: reqBody.isPrivate,
+              url: `/watch?v=${videoId}`,
+              originalName: req.file.originalname,
+              size: req.file.size,
+          };
 
-          res.json({ status: 'success', payload: newVideo })
+          const newVideo = await videoServices.create(info);
+
+          res.json({ status: 'success', payload: newVideo });
           console.log('finaliza el servicio /post de videoController');
-        })
-        
-  
-  })
+      } catch (error) {
+          console.error('Error al crear el video:', error);
+          res.status(500).json({ error: 'Error interno del servidor' });
+      }
+  });
+});
+
 
   router.delete('/:userId/:videoId', async (req, res) => {
     try {
