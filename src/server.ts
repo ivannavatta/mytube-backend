@@ -12,11 +12,7 @@ app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 app.use(express.static(__dirname + '/public'))
 
-app.use(cors({
-    origin: 'https://mytube-green.vercel.app', // Asegúrate de usar el dominio correcto
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajusta según los métodos permitidos
-    allowedHeaders: ['Content-Type', 'Authorization'] // Ajusta según los headers permitidos
-}));
+app.use(cors());
 
 router(app)
 

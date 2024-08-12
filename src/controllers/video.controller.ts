@@ -69,10 +69,15 @@ router.post('/channel', async (req, res) => {
 })
 router.post('/', async (req, res, next) => {
   console.log('inicia el servicio /post de videoController');
-  
   uploader.single('img')(req, res, async function (err) {
+    console.log('dentro del uploader');
+    
       try {
+        console.log('dentro del try antes del if');
+        
           if (err) {
+            console.log('dentro del if', err);
+            
               if (err.code === 'LIMIT_FILE_SIZE') {
                   console.log('El archivo es demasiado grande. El tamaño máximo permitido es 200MB.');
                   return res.status(400).json({ error: 'El archivo es demasiado grande. El tamaño máximo permitido es 200MB.' });
@@ -86,6 +91,8 @@ router.post('/', async (req, res, next) => {
           if (!req.file) {
               return res.status(400).json({ error: 'No se subió ningún archivo' });
           }
+          console.log('req.body:', req.body);
+          
       
           const reqBody = {
               email: req.body.email,
