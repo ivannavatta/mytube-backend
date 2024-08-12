@@ -5,7 +5,7 @@ import { Request } from 'express'
 // Configuración del almacenamiento
 const storage = multer.diskStorage({
   destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void): void {
-    cb(null, process.cwd() + '/src/public')
+    cb(null, __dirname + '/public')
   },
   filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void): void {
     cb(null, file.originalname)
