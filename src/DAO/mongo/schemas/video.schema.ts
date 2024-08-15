@@ -17,6 +17,7 @@ const videoSchema = new mongoose.Schema({
                     default: false
                 },
                 url: String,
+                urlGCS: String,
                 status: {
                     type: Boolean,
                     default: true

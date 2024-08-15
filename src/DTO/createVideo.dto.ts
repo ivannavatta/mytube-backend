@@ -10,6 +10,7 @@ export default class CreateVideoDto{
     size: number
     isPrivate?: boolean
     url: string
+    urlGCS: string
     constructor(newVideoInfo: IVideo, id: Types.ObjectId){
         this.user = id
         this.originalName = newVideoInfo.originalName
@@ -17,5 +18,6 @@ export default class CreateVideoDto{
         this.size = convertBytesToMegaBites(Number(newVideoInfo.size))
         this.isPrivate = ValidatePrivacy(newVideoInfo.isPrivate ?? 'public')
         this.url =  newVideoInfo.url
+        this.urlGCS = newVideoInfo.urlGCS
     }
 }

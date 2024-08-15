@@ -2,7 +2,8 @@ export default interface IVideo {
     email: string
     originalName: string
     title: string
-    size: number,
+    size: number
     isPrivate?: string
-    url: string,
+    url: string
+    urlGCS: string
 }

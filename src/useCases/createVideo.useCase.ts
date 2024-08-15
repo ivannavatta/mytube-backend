@@ -17,7 +17,7 @@ export default class CreateVideo {
     }
 
     async execute(params: IVideo): Promise<any> {
-        const { email, originalName, title, size, isPrivate, url } = params;
+        const { email, originalName, title, size, isPrivate } = params;
         const user = await this.find.execute(email);
 
         if (!user) {
@@ -37,7 +37,8 @@ export default class CreateVideo {
             title: newVideo.title,
             size: newVideo.size,
             isPrivate: newVideo.isPrivate,
-            url: newVideo.url
+            url: newVideo.url,
+            urlGCS: newVideo.urlGCS
         };
 
         const findVideo = await this.findVideo.execute(userId);

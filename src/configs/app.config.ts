@@ -6,5 +6,8 @@ export default {
     dbUser: process.env.DBUSER,
     dbPassword: process.env.DBPASSWORD,
     dbName: process.env.DBNAME,
-    baseUrl: process.env.BASE_URL
+    baseUrl: process.env.BASE_URL,
+    cloudCredencial: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+    cloudProjectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+    cloudBucketName: process.env.GOOGLE_CLOUD_BUCKET_NAME || ''
 }
