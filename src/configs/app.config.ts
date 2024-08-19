@@ -20,7 +20,8 @@ export default {
             "auth_uri": process.env.GOOGLE_CLOUD_AUTH_URI,
             "token_uri": process.env.GOOGLE_CLOUD_TOKEN_URI,
             "auth_provider_x509_cert_url": process.env.GOOGLE_CLOUD_AUTH_PROVIDER_CERT_URL,
-            "client_x509_cert_url": process.env.GOOGLE_CLOUD_CLIENT_CERT_URL
+            "client_x509_cert_url": process.env.GOOGLE_CLOUD_CLIENT_CERT_URL,
+            "universe_domain": "googleapis.com"
         })
         : process.env.GOOGLE_APPLICATION_CREDENTIALS,
     cloudProjectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
