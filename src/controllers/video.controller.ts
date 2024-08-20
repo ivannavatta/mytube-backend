@@ -157,7 +157,7 @@ router.post('/', uploader.single('img'), async (req, res) => {
     console.log('finaliza el servicio /post de videoController');
   } catch (error) {
     console.error('Error al crear el video:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ status: 'Internal Server Error', error: error });
   }
 });
 
