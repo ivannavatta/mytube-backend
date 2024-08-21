@@ -2,18 +2,20 @@ import { Storage } from '@google-cloud/storage';
 import { v4 as uuidv4 } from 'uuid';
 import config from '../configs/app.config'
 const {cloudCredencial, cloudProjectId, cloudBucketName} = config
-// Configura el cliente de Google Cloud Storage
 
-const isProduction = process.env.NODE_ENV === 'production';
+let storage;
 
-const credentials = isProduction 
-  ? JSON.parse(cloudCredencial || '')
-  : cloudCredencial;
-
-const storage = new Storage({
-  keyFilename: credentials,
-  projectId: cloudProjectId,
-});
+if (process.env.NODE_ENV === 'production' && cloudCredencial) {
+  storage = new Storage({
+    projectId: cloudProjectId,
+    credentials: JSON.parse(cloudCredencial),
+  });
+} else {
+  storage = new Storage({
+    projectId: cloudProjectId,
+    keyFilename: cloudCredencial, 
+  });
+}
 
 const bucket = storage.bucket(cloudBucketName);
 
