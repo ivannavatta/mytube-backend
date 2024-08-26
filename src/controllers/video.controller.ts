@@ -33,6 +33,7 @@ router.get('/', async (req, res) => {
       console.log('finaliza servico /get de videoController');
   } catch (error) {
     console.log('comienza el CATCH servicio /get de videoController');
+    console.log(error);
       res.status(500).json({status: 'Internal Server Error',  error: error})
   }
 })
@@ -47,6 +48,7 @@ router.get('/public', async (req, res) => {
         console.log('finaliza servico /public de videoController');
     } catch (error) {
       console.log('comienza el CATCH servicio /public de videoController');
+      console.log(error);
         res.status(500).json({status: 'Internal Server Error',  error: error})
     }
 })
@@ -62,6 +64,7 @@ router.post('/channel', async (req, res) => {
     console.log('finaliza servico /channel de videoController');
 } catch (error) {
   console.log('comienza el CATCH servicio /channel de videoController');
+  console.log(error);
     res.status(500).json({status: 'Internal Server Error',  error: error})
 }
 })
@@ -110,6 +113,7 @@ router.post('/', async (req, res) => {
       console.log('finaliza el servicio /post de videoController');
     } catch (error) {;
       console.log('comienza el CATCH servicio /post del videoController');
+      console.log(error);
       if(error instanceof Error){
         if (error.message === 'ya subiste tu maximo de videos') {
           return res.status(400).json({ error: 'alcanzaste el maximo de videos' });
@@ -136,6 +140,7 @@ router.post('/', async (req, res) => {
         console.log('finaliza servicio /delete de videoController');
     } catch (error) {
       console.log('comienza el CATCH servicio /delete del videoController');
+      console.log(error);
         if(error instanceof Error){
         res.status(500).json({ status: 'Internal Server Error', error: error.message });
         }

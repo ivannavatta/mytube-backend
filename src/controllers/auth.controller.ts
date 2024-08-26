@@ -21,13 +21,15 @@ router.post('/', async (req, res) => {
         console.log('termina el servicio /post del auth');
         
     } catch (error) {
+        console.log('comienza el CATCH servicio /post del auth');
+        console.log(error);
+        
         if(error instanceof Error){
-            console.log('comienza el CATCH servicio /post del auth');
-
-            console.log(error.message);
+            if(error.message === 'Bad request') {
+                res.status(400).json({ status: 'error', message: 'Bad request' });
+                return
+            }
             res.status(500).json({status: 'Internal Server Error',  error: error.message})
-            
-            console.log('termina el CATCH servicio /post del auth');
         }
     }
 })

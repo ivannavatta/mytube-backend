@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
 
         console.log('finaliza servico /get de usersController');
     } catch (error) {
+        console.log('comienza el CATCH servicio /get del usersController');
         console.log(error);
         res.status(500).json({status: 'Internal Server Error',  error: error})
     }
@@ -34,21 +35,18 @@ router.post('/', async (req, res) => {
 
         console.log('finaliza servicio /post de usersController');
     } catch (error) {
+        console.log('comienza el CATCH servicio /post del usersController');
+        console.log(error);
         if (error instanceof Error) {
-            console.log('comienza el CATCH servicio /post del users');
-            console.log(error.message);
-
+    
             if (error.message === 'bad request') {
                 res.status(400).json({ status: 'Error', error: 'Missing required fields' });
             } else if (error.message === 'Email already exist') {
-                console.log('hola');
                 
                 res.redirect('/users/fail-register');
             } else {
                 res.status(500).json({ status: 'Internal Server Error', error: error.message });
             }
-
-            console.log('termina el CATCH servicio /post del users');
         }
     }
 });
