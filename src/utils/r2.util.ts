@@ -1,7 +1,7 @@
 import {
     S3Client,
     PutObjectCommand,
-    HeadObjectCommand,
+    GetObjectCommand,
     DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -20,6 +20,10 @@ const client = new S3Client({
     endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId, secretAccessKey },
     forcePathStyle: true,
+    // Desde aws-sdk 3.729 los checksums por defecto son incompatibles con R2:
+    // la URL prefirmada incluía el CRC32 de un body vacío y rechazaba cualquier subida real.
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+    responseChecksumValidation: 'WHEN_REQUIRED',
 });
 
 const sanitizeFileName = (fileName: string): string =>
@@ -55,13 +59,21 @@ export const createUploadUrl = async (fileName: string) => {
     return { uploadUrl, key };
 };
 
-/** Devuelve el tamaño real del objeto subido, o null si no existe. */
+/**
+ * Devuelve el tamaño real del objeto subido, o null si no existe.
+ * Usa GET de 1 byte en vez de HEAD: un HEAD fallido no trae body y R2 no dice el motivo
+ * (credenciales, firma, permisos). Con GET el error trae su código y queda en el log.
+ */
 export const getUploadedSize = async (key: string): Promise<number | null> => {
     try {
-        const head = await client.send(new HeadObjectCommand({ Bucket: bucketName, Key: key }));
-        return head.ContentLength ?? null;
+        const res = await client.send(new GetObjectCommand({ Bucket: bucketName, Key: key, Range: 'bytes=0-0' }));
+        res.Body?.transformToByteArray().catch(() => {}); // liberar el stream
+        // Content-Range: "bytes 0-0/<tamaño total>"
+        const total = Number(res.ContentRange?.split('/')[1]);
+        return Number.isFinite(total) ? total : (res.ContentLength ?? null);
     } catch (error: any) {
-        if (error?.$metadata?.httpStatusCode === 404 || error?.name === 'NotFound') return null;
+        if (error?.name === 'NoSuchKey' || error?.$metadata?.httpStatusCode === 404) return null;
+        console.error(`R2 GetObject falló: ${error?.name} (HTTP ${error?.$metadata?.httpStatusCode}) - ${error?.message}`);
         throw error;
     }
 };
