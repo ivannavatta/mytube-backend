@@ -2,7 +2,8 @@ import mongoose from "mongoose"
 import appConfig from "../configs/app.config"
 const { dbUser, dbName, dbPassword } = appConfig
 
-const uri = `mongodb+srv://${dbUser}:${dbPassword}@${dbName}/MyTube?retryWrites=true&w=majority&appName=Cluster0`
+// encodeURIComponent: si la contraseña tiene @ : / # % la URI se rompería
+const uri = `mongodb+srv://${encodeURIComponent(dbUser ?? '')}:${encodeURIComponent(dbPassword ?? '')}@${dbName}/MyTube?retryWrites=true&w=majority&appName=Cluster0`
 
 // En Vercel cada invocación "caliente" reutiliza el módulo,
 // así que cacheamos la promesa para no abrir una conexión por request.
