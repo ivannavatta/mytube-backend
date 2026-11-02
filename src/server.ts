@@ -12,11 +12,8 @@ const allowedOrigins = (process.env.FRONT_URL || 'https://mytube-green.vercel.ap
 // CORS primero, así hasta las respuestas de error llevan los headers
 app.use(cors({ origin: allowedOrigins }))
 
+// Los videos van directo a R2, el back solo recibe JSON chico
 app.use(express.json())
-
-app.use(express.urlencoded({ limit: '200mb', extended: true }));
-
-app.use(express.static(__dirname + '/public'))
 
 // Asegura la conexión a Mongo antes de cada request.
 // Si la DB no responde, devolvemos 503 en vez de colgar la función hasta el timeout de Vercel.

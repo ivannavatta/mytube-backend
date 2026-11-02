@@ -4,6 +4,7 @@ import VideoStore from "../stores/video.store";
 import FindUser from "./findUser.useCase";
 import FindVideo from "./findVideo.useCase";
 
+export const MAX_VIDEOS_PER_USER = 2;
 
 export default class CreateVideo {
     private store: VideoStore;
@@ -38,12 +39,12 @@ export default class CreateVideo {
             size: newVideo.size,
             isPrivate: newVideo.isPrivate,
             url: newVideo.url,
-            urlGCS: newVideo.urlGCS
+            videoUrl: newVideo.videoUrl
         };
-        
+
         const findVideo = await this.findVideo.execute(userId);
 
-        if(findVideo && findVideo?.videos.length >= 2) {
+        if(findVideo && findVideo?.videos.length >= MAX_VIDEOS_PER_USER) {
             throw new Error('ya subiste tu maximo de videos')
         }
         

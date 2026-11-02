@@ -5,5 +5,5 @@ export default interface IVideo {
     size: number
     isPrivate?: string
     url: string
-    urlGCS: string
+    videoUrl: string
 }
