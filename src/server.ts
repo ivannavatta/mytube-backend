@@ -1,10 +1,16 @@
 import express from 'express'
 import router from './router'
-import mongoInitialize from './db'
+import connectDB from './db'
 import cors from 'cors'
 
-
 const app = express()
+
+const allowedOrigins = (process.env.FRONT_URL || 'https://mytube-green.vercel.app')
+    .split(',')
+    .map((origin) => origin.trim())
+
+// CORS primero, así hasta las respuestas de error llevan los headers
+app.use(cors({ origin: allowedOrigins }))
 
 app.use(express.json())
 
@@ -12,10 +18,18 @@ app.use(express.urlencoded({ limit: '200mb', extended: true }));
 
 app.use(express.static(__dirname + '/public'))
 
-app.use(cors({ origin: "https://mytube-green.vercel.app"}));
+// Asegura la conexión a Mongo antes de cada request.
+// Si la DB no responde, devolvemos 503 en vez de colgar la función hasta el timeout de Vercel.
+app.use(async (req, res, next) => {
+    try {
+        await connectDB()
+        next()
+    } catch (error) {
+        console.error('Database connection error:', error)
+        res.status(503).json({ status: 'error', message: 'Database unavailable' })
+    }
+})
 
 router(app)
-
-mongoInitialize()
 
 export default app
